@@ -8,9 +8,9 @@ from watchdog.events import FileSystemEventHandler
 def main():
         for event in device.read_loop():
             if event.type == evdev.ecodes.EV_KEY:
-                if (event.code == X52ProEvdevKeyMapping.FIRE_C):
-                    if (event.value == evdev.events.KeyEvent.key_down):
-                        dev.set_mfd_text(X52MfdLine.LINE2,"blop blop")
+                #if (event.code == X52ProEvdevKeyMapping.FIRE_C):
+                #    if (event.value == evdev.events.KeyEvent.key_down):
+                #        dev.set_mfd_text(X52MfdLine.LINE2,"blop blop")
                 eventLEDButton(dev, event.code, event.value)
 #                try:
 #                    print(event.code)
@@ -34,6 +34,12 @@ def sigInt(sig_in,frame):
     device.close()
     exit(0)
 
+def extract_count(json):
+    try:
+        return int(json["Count"])
+    except KeyError:
+        return 0
+
 class Handler(FileSystemEventHandler):
     @staticmethod
     def on_any_event(event):
@@ -44,8 +50,27 @@ class Handler(FileSystemEventHandler):
             data = json.load(f)
             f.close()
             print("cargo: ")
+            data["Inventory"].sort(key=extract_count,reverse=True)
             for n,item in enumerate(data["Inventory"]):
                 print(item["Name"], ": ", item["Count"])
+            name1 = data["Inventory"][0]["Name"]
+            name2 = data["Inventory"][1]["Name"]
+            name3 = data["Inventory"][2]["Name"]
+            count1 = str(data["Inventory"][0]["Count"])
+            count2 = str(data["Inventory"][1]["Count"])
+            count3 = str(data["Inventory"][2]["Count"])
+            if len(name1) > (14 - len(count1)):
+                name1 = name1[0:(14 - len(count1))]
+            if len(name2) > (14 - len(count2)):
+                name2 = name2[0:(14 - len(count2))]
+            if len(name3) > (14 - len(count3)):
+                name3 = name3[0:(14 - len(count3))]
+            line1 = name1 + ": " + count1
+            line2 = name2 + ": " + count2
+            line3 = name3 + ": " + count3
+            dev.set_mfd_text(X52MfdLine.LINE1,line1)
+            dev.set_mfd_text(X52MfdLine.LINE2,line2)
+            dev.set_mfd_text(X52MfdLine.LINE3,line3)
            
 if __name__ == "__main__":
     event_handler = Handler()
