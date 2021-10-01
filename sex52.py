@@ -1,9 +1,11 @@
 import evdev
 import signal
+import json
 from x52_driver import X52Driver, X52ProEvdevKeyMapping, X52MfdLine, X52ColoredLedStatus
+from watchdog.observers import Observer
+from watchdog.events import FileSystemEventHandler
 
 def main():
-    try:
         for event in device.read_loop():
             if event.type == evdev.ecodes.EV_KEY:
                 if (event.code == X52ProEvdevKeyMapping.FIRE_C):
@@ -14,10 +16,6 @@ def main():
 #                    print(event.code)
 #                except KeyError:
 #                    print("keyerror")
-    except:
-        print("error")
-        device.close()
-        exit(0)
 
 def eventLEDButton(dev, code, val):
     if (val == evdev.events.KeyEvent.key_down):
@@ -32,9 +30,34 @@ dev    = X52Driver.find_supported_devices()[0]
 
 def sigInt(sig_in,frame):
     print("bye...")
+    observer.stop()
     device.close()
     exit(0)
 
+class Handler(FileSystemEventHandler):
+    @staticmethod
+    def on_any_event(event):
+        if event.is_directory:
+            return None
+        elif event.event_type == 'modified':
+            f = open(event.src_path,)
+            data = json.load(f)
+            f.close()
+            print("cargo: ")
+            for n,item in enumerate(data["Inventory"]):
+                print(item["Name"], ": ", item["Count"])
+           
 if __name__ == "__main__":
+    event_handler = Handler()
+    observer = Observer()
+    observer.schedule(event_handler, "/home/coghex/.steam/steam/steamapps/compatdata/359320/pfx/drive_c/users/steamuser/Saved Games/Frontier Developments/Elite Dangerous/Cargo.json", recursive=True)
+    observer.start()
     signal.signal(signal.SIGINT, sigInt)
-    main()
+    try:
+        main()
+    except:
+        print("error")
+        observer.stop()
+        device.close()
+        exit(0)
+    observer.join()
