@@ -1,7 +1,7 @@
 import evdev
 from x52_driver import X52Driver
 
-device = evdev.InputDevice('/dev/input/event25')
+device = evdev.InputDevice('/dev/input/by-id/usb-Logitech_X52_Professional_H.O.T.A.S.-event-joystick')
 dev    = X52Driver.find_supported_devices()[0]
 
 #print(device.capabilities(verbose=True))
