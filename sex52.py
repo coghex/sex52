@@ -11,12 +11,12 @@ for event in device.read_loop():
     if event.type == evdev.ecodes.EV_KEY:
         if (event.code == X52ProEvdevKeyMapping.FIRE_C):
             if (event.value == evdev.events.KeyEvent.key_down):
-                X52Driver.set_mfd_text(dev,X52MfdLine.LINE2,"blop blop")
+                dev.set_mfd_text(X52MfdLine.LINE2,"blop blop")
         if (event.code == X52ProEvdevKeyMapping.FIRE_A):
             if (event.value == evdev.events.KeyEvent.key_down):
-                X52Driver.set_led_a(dev,X52ColoredLedStatus.RED)
+                dev.set_led_a(X52ColoredLedStatus.RED)
             if (event.value == evdev.events.KeyEvent.key_up):
-                X52Driver.set_led_a(dev,X52ColoredLedStatus.GREEN)
+                dev.set_led_a(X52ColoredLedStatus.GREEN)
 #        try:
 #            print(event.code)
 #        except KeyError:
