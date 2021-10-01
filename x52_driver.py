@@ -1,5 +1,3 @@
-"""USB driver for third generation NZXT Kraken X and M liquid coolers.
-"""
 import datetime
 import logging
 from enum import Enum, unique, IntEnum
@@ -167,6 +165,87 @@ class X52ColoredLedStatus(IntEnum):
     AMBER = 3
 
 
+@unique
+class X52ProEvdevKeyMapping(IntEnum):
+    TRIGGER = 288
+    FIRE = 289
+    FIRE_A = 290
+    FIRE_B = 291
+    FIRE_C = 292
+    PINKIE = 293
+    FIRE_D = 294
+    FIRE_E = 295
+    TOGGLE_1 = 296
+    TOGGLE_2 = 297
+    TOGGLE_3 = 298
+    TOGGLE_4 = 299
+    TOGGLE_5 = 300
+    TOGGLE_6 = 301
+    SECONDARY_TRIGGER = 302
+    LEFT_MOUSE_BUTTON = 303
+    SCROLL_DOWN = 704
+    SCROLL_UP = 705
+    SCROLL_CLICK = 706
+    POV_2_UP = 707
+    POV_2_RIGHT = 708
+    POV_2_DOWN = 709
+    POV_2_LEFT = 710
+    THROTTLE_HAT_UP = 711
+    THROTTLE_HAT_RIGHT = 712
+    THROTTLE_HAT_DOWN = 713
+    THROTTLE_HAT_LEFT = 714
+    MODE_1 = 715
+    MODE_2 = 716
+    MODE_3 = 717
+    FIRE_I = 718
+    MFD_FUNCTION = 719
+    MFD_START_STOP = 720
+    MFD_RESET = 721
+    MFD_PAGE_UP = 722
+    MFD_PAGE_DOWN = 723
+    MFD_UP = 724
+    MFD_DOWN = 725
+    MFD_SELECT = 726
+
+
+@unique
+class X52EvdevKeyMapping(IntEnum):
+    TRIGGER = 288
+    FIRE = 289
+    FIRE_A = 290
+    FIRE_B = 291
+    FIRE_C = 292
+    PINKIE = 293
+    FIRE_D = 294
+    FIRE_E = 295
+    TOGGLE_1 = 296
+    TOGGLE_2 = 297
+    TOGGLE_3 = 298
+    TOGGLE_4 = 299
+    TOGGLE_5 = 300
+    TOGGLE_6 = 301
+    SECONDARY_TRIGGER = 302
+    POV_2_UP = 303
+    POV_2_RIGHT = 704
+    POV_2_DOWN = 705
+    POV_2_LEFT = 706
+    THROTTLE_HAT_UP = 707
+    THROTTLE_HAT_RIGHT = 708
+    THROTTLE_HAT_DOWN = 709
+    THROTTLE_HAT_LEFT = 710
+    MODE_1 = 711
+    MODE_2 = 712
+    MODE_3 = 713
+    FIRE_I = 717
+    LEFT_MOUSE_BUTTON = 718
+    SCROLL_CLICK = 719
+    SCROLL_DOWN = 720
+    SCROLL_UP = 721
+    MFD_FUNCTION = 714
+    MFD_START_STOP = 715
+    MFD_RESET = 716
+
+
 class X52Driver:
     def __init__(self, usb_device: Device, x52_device: X52Device) -> None:
         self.usb_device = usb_device
@@ -188,38 +267,25 @@ class X52Driver:
                 devices.append(cls(dev, supported_device))
         return devices
 
-    def set_led_a(self, led: X52ColoredLedStatus) -> None:
-        self._set_colored_led_status(led, X52LedRed.X52_BIT_LED_A_RED, X52LedGreen.X52_BIT_LED_A_GREEN)
-
-    def set_led_b(self, led: X52ColoredLedStatus) -> None:
-        self._set_colored_led_status(led, X52LedRed.X52_BIT_LED_B_RED, X52LedGreen.X52_BIT_LED_B_GREEN)
-
-    def set_led_d(self, led: X52ColoredLedStatus) -> None:
-        self._set_colored_led_status(led, X52LedRed.X52_BIT_LED_D_RED, X52LedGreen.X52_BIT_LED_D_GREEN)
-
-    def set_led_e(self, led: X52ColoredLedStatus) -> None:
-        self._set_colored_led_status(led, X52LedRed.X52_BIT_LED_E_RED, X52LedGreen.X52_BIT_LED_E_GREEN)
-
-    def set_led_t1_t2(self, led: X52ColoredLedStatus) -> None:
-        self._set_colored_led_status(led, X52LedRed.X52_BIT_LED_T1_RED, X52LedGreen.X52_BIT_LED_T1_GREEN)
-
-    def set_led_t3_t4(self, led: X52ColoredLedStatus) -> None:
-        self._set_colored_led_status(led, X52LedRed.X52_BIT_LED_T2_RED, X52LedGreen.X52_BIT_LED_T2_GREEN)
-
-    def set_led_t5_t6(self, led: X52ColoredLedStatus) -> None:
-        self._set_colored_led_status(led, X52LedRed.X52_BIT_LED_T3_RED, X52LedGreen.X52_BIT_LED_T3_GREEN)
-
-    def set_led_pov_2(self, led: X52ColoredLedStatus) -> None:
-        self._set_colored_led_status(led, X52LedRed.X52_BIT_LED_POV_RED, X52LedGreen.X52_BIT_LED_POV_GREEN)
-
-    def set_led_i(self, led: X52ColoredLedStatus) -> None:
-        self._set_colored_led_status(led, X52LedRed.X52_BIT_LED_I_RED, X52LedGreen.X52_BIT_LED_I_GREEN)
-
-    def set_led_fire(self, led_status: X52LedStatus) -> None:
-        self._set_led_status(X52Led.X52_BIT_LED_FIRE.value, led_status)
-
-    def set_led_throttle(self, led_status: X52LedStatus) -> None:
-        self._set_led_status(X52Led.X52_BIT_LED_THROTTLE.value, led_status)
+    def set_led(self, code: X52ProEvdevKeyMapping, led: X52ColoredLedStatus) -> None:
+        if (code == X52ProEvdevKeyMapping.FIRE_A):
+            self._set_colored_led_status(led, X52LedRed.X52_BIT_LED_A_RED, X52LedGreen.X52_BIT_LED_A_GREEN)
+        if (code == X52ProEvdevKeyMapping.FIRE_B):
+            self._set_colored_led_status(led, X52LedRed.X52_BIT_LED_B_RED, X52LedGreen.X52_BIT_LED_B_GREEN)
+        if (code == X52ProEvdevKeyMapping.FIRE_D):
+            self._set_colored_led_status(led, X52LedRed.X52_BIT_LED_D_RED, X52LedGreen.X52_BIT_LED_D_GREEN)
+        if (code == X52ProEvdevKeyMapping.FIRE_E):
+            self._set_colored_led_status(led, X52LedRed.X52_BIT_LED_E_RED, X52LedGreen.X52_BIT_LED_E_GREEN)
+        if (code == X52ProEvdevKeyMapping.TOGGLE_1) or (code == X52ProEvdevKeyMapping.TOGGLE_2):
+            self._set_colored_led_status(led, X52LedRed.X52_BIT_LED_T1_RED, X52LedGreen.X52_BIT_LED_T1_GREEN)
+        if (code == X52ProEvdevKeyMapping.TOGGLE_3) or (code == X52ProEvdevKeyMapping.TOGGLE_4):
+            self._set_colored_led_status(led, X52LedRed.X52_BIT_LED_T2_RED, X52LedGreen.X52_BIT_LED_T2_GREEN)
+        if (code == X52ProEvdevKeyMapping.TOGGLE_5) or (code == X52ProEvdevKeyMapping.TOGGLE_6):
+            self._set_colored_led_status(led, X52LedRed.X52_BIT_LED_T3_RED, X52LedGreen.X52_BIT_LED_T3_GREEN)
+#            self._set_colored_led_status(led, X52LedRed.X52_BIT_LED_POV_RED, X52LedGreen.X52_BIT_LED_POV_GREEN)
+#            self._set_colored_led_status(led, X52LedRed.X52_BIT_LED_I_RED, X52LedGreen.X52_BIT_LED_I_GREEN)
+#            self._set_led_status(X52Led.X52_BIT_LED_FIRE.value, led_status)
+#            self._set_led_status(X52Led.X52_BIT_LED_THROTTLE.value, led_status)
 
     def set_led_brightness(self, level: int) -> None:
         self._set_brightness(X52BrightnessCommand.LED_BRIGHTNESS, level)
@@ -320,83 +386,3 @@ class X52Driver:
         value += offset_in_min
         self._vendor_command(command.value, value)
 
-
-@unique
-class X52ProEvdevKeyMapping(IntEnum):
-    TRIGGER = 288
-    FIRE = 289
-    FIRE_A = 290
-    FIRE_B = 291
-    FIRE_C = 292
-    PINKIE = 293
-    FIRE_D = 294
-    FIRE_E = 295
-    TOGGLE_1 = 296
-    TOGGLE_2 = 297
-    TOGGLE_3 = 298
-    TOGGLE_4 = 299
-    TOGGLE_5 = 300
-    TOGGLE_6 = 301
-    SECONDARY_TRIGGER = 302
-    LEFT_MOUSE_BUTTON = 303
-    SCROLL_DOWN = 704
-    SCROLL_UP = 705
-    SCROLL_CLICK = 706
-    POV_2_UP = 707
-    POV_2_RIGHT = 708
-    POV_2_DOWN = 709
-    POV_2_LEFT = 710
-    THROTTLE_HAT_UP = 711
-    THROTTLE_HAT_RIGHT = 712
-    THROTTLE_HAT_DOWN = 713
-    THROTTLE_HAT_LEFT = 714
-    MODE_1 = 715
-    MODE_2 = 716
-    MODE_3 = 717
-    FIRE_I = 718
-    MFD_FUNCTION = 719
-    MFD_START_STOP = 720
-    MFD_RESET = 721
-    MFD_PAGE_UP = 722
-    MFD_PAGE_DOWN = 723
-    MFD_UP = 724
-    MFD_DOWN = 725
-    MFD_SELECT = 726
-
-
-@unique
-class X52EvdevKeyMapping(IntEnum):
-    TRIGGER = 288
-    FIRE = 289
-    FIRE_A = 290
-    FIRE_B = 291
-    FIRE_C = 292
-    PINKIE = 293
-    FIRE_D = 294
-    FIRE_E = 295
-    TOGGLE_1 = 296
-    TOGGLE_2 = 297
-    TOGGLE_3 = 298
-    TOGGLE_4 = 299
-    TOGGLE_5 = 300
-    TOGGLE_6 = 301
-    SECONDARY_TRIGGER = 302
-    POV_2_UP = 303
-    POV_2_RIGHT = 704
-    POV_2_DOWN = 705
-    POV_2_LEFT = 706
-    THROTTLE_HAT_UP = 707
-    THROTTLE_HAT_RIGHT = 708
-    THROTTLE_HAT_DOWN = 709
-    THROTTLE_HAT_LEFT = 710
-    MODE_1 = 711
-    MODE_2 = 712
-    MODE_3 = 713
-    FIRE_I = 717
-    LEFT_MOUSE_BUTTON = 718
-    SCROLL_CLICK = 719
-    SCROLL_DOWN = 720
-    SCROLL_UP = 721
-    MFD_FUNCTION = 714
-    MFD_START_STOP = 715
-    MFD_RESET = 716
