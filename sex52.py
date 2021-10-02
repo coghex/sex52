@@ -19,9 +19,15 @@ def main():
 
 def eventLEDButton(dev, code, val):
     if (val == evdev.events.KeyEvent.key_down):
-        dev.set_led(code,X52ColoredLedStatus.RED)
+        if (code == X52ProEvdevKeyMapping.TOGGLE_2) or (code == X52ProEvdevKeyMapping.TOGGLE_4) or (code == X52ProEvdevKeyMapping.TOGGLE_6):
+            dev.set_led(code,X52ColoredLedStatus.GREEN)
+        else:
+            dev.set_led(code,X52ColoredLedStatus.RED)
     if (val == evdev.events.KeyEvent.key_up):
-        dev.set_led(code,X52ColoredLedStatus.GREEN)
+        if (code == X52ProEvdevKeyMapping.TOGGLE_1) or (code == X52ProEvdevKeyMapping.TOGGLE_2) or (code == X52ProEvdevKeyMapping.TOGGLE_3) or (code == X52ProEvdevKeyMapping.TOGGLE_4) or (code == X52ProEvdevKeyMapping.TOGGLE_5) or (code == X52ProEvdevKeyMapping.TOGGLE_6):
+            dev.set_led(code,X52ColoredLedStatus.AMBER)
+        else:
+            dev.set_led(code,X52ColoredLedStatus.GREEN)
 
 device = evdev.InputDevice('/dev/input/by-id/usb-Logitech_X52_Professional_H.O.T.A.S.-event-joystick')
 dev    = X52Driver.find_supported_devices()[0]
@@ -49,10 +55,8 @@ class Handler(FileSystemEventHandler):
             f = open(event.src_path,)
             data = json.load(f)
             f.close()
-            print("cargo: ")
-            data["Inventory"].sort(key=extract_count,reverse=True)
-            for n,item in enumerate(data["Inventory"]):
-                print(item["Name"], ": ", item["Count"])
+            #for n,item in enumerate(data["Inventory"]):
+            #    print(item["Name"], ": ", item["Count"])
             if (len(data["Inventory"]) == 0):
                 line1 = "no cargo"
                 line2 = " "
@@ -61,6 +65,8 @@ class Handler(FileSystemEventHandler):
                 dev.set_mfd_text(X52MfdLine.LINE2,line2)
                 dev.set_mfd_text(X52MfdLine.LINE3,line3)
                 return ()
+            print("cargo: ")
+            data["Inventory"].sort(key=extract_count,reverse=True)
             name1 = data["Inventory"][0]["Name"]
             count1 = str(data["Inventory"][0]["Count"])
             if len(name1) > (14 - len(count1)):
@@ -112,9 +118,9 @@ def init():
     dev.set_led(X52ProEvdevKeyMapping.FIRE_E,X52ColoredLedStatus.GREEN)
     dev.set_led(X52ProEvdevKeyMapping.FIRE_I,X52ColoredLedStatus.GREEN)
     dev.set_led(X52ProEvdevKeyMapping.POV_2_UP,X52ColoredLedStatus.GREEN)
-    dev.set_led(X52ProEvdevKeyMapping.TOGGLE_1,X52ColoredLedStatus.GREEN)
-    dev.set_led(X52ProEvdevKeyMapping.TOGGLE_2,X52ColoredLedStatus.GREEN)
-    dev.set_led(X52ProEvdevKeyMapping.TOGGLE_3,X52ColoredLedStatus.GREEN)
+    dev.set_led(X52ProEvdevKeyMapping.TOGGLE_1,X52ColoredLedStatus.AMBER)
+    dev.set_led(X52ProEvdevKeyMapping.TOGGLE_2,X52ColoredLedStatus.AMBER)
+    dev.set_led(X52ProEvdevKeyMapping.TOGGLE_3,X52ColoredLedStatus.AMBER)
            
 if __name__ == "__main__":
     event_handler = Handler()
