@@ -53,8 +53,12 @@ class Handler(FileSystemEventHandler):
             return None
         elif event.event_type == 'modified':
             f = open(event.src_path,)
-            data = json.load(f)
-            f.close()
+            try:
+                data = json.load(f)
+                f.close()
+            except:
+                f.close()
+                return()
             #for n,item in enumerate(data["Inventory"]):
             #    print(item["Name"], ": ", item["Count"])
             if (len(data["Inventory"]) == 0):
