@@ -1,6 +1,6 @@
 # sex52
 
-controls the logitech x52 pro from Elite Dangerous in linux.  prints cargo on MFD, toggles the LEDs on button press, and handles other buttons that the linux driver cant (through evdev).
+controls the logitech x52 pro from Elite Dangerous in linux.  prints cargo and nav route on MFD, toggles the LEDs on button press, and handles other buttons that the linux driver cant (through evdev).
 
 if getting permissions errors, set up a udev rule:
 

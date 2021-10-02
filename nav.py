@@ -1,4 +1,5 @@
 import json
+import journal
 from x52_driver import X52Driver, X52ProEvdevKeyMapping, X52MfdLine, X52ColoredLedStatus
 
 def handleNav(path,dev):
@@ -19,7 +20,7 @@ def handleNav(path,dev):
     print("updating nav...")
     dest = data["Route"][0]["StarSystem"]
     if (len(data["Route"]) == 1):
-        line1 = "final jump:"
+        line1 = "destination:"
         line2 = dest
         line3 = " "
         dev.set_mfd_text(X52MfdLine.LINE1,line1)

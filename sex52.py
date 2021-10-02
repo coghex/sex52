@@ -6,6 +6,7 @@ import time
 import cargo
 import nav
 import inp
+import journal
 from x52_driver import X52Driver, X52ProEvdevKeyMapping, X52MfdLine, X52ColoredLedStatus
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
@@ -27,6 +28,10 @@ class Handler(FileSystemEventHandler):
                 cargo.handleCargo(path,dev)
             elif (fn == "NavRoute.json"):
                 nav.handleNav(path,dev)
+            else:
+                journ = journal.getCurrentJournal(os.path.dirname(path))
+                if (fn == (journ + ".01.log")):
+                    journal.handleJournal(path,dev)
 
 def init(dev):
     dev.set_mfd_brightness(32)
