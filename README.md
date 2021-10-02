@@ -1,6 +1,8 @@
 # sex52
 
-controls the logitech x52 pro for linux, if getting permissions errors, set up a udev rule:
+controls the logitech x52 pro from Elite Dangerous in linux.  prints cargo on MFD, toggles the LEDs on button press, and handles other buttons that the linux driver cant (through evdev).
+
+if getting permissions errors, set up a udev rule:
 
 `/etc/udev/rules.d/20-sex52.rules`
 
@@ -14,4 +16,4 @@ run with:
 
 `python sex52`
 
-only tested with python3
+only tested with python3.

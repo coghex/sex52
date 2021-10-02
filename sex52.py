@@ -53,24 +53,50 @@ class Handler(FileSystemEventHandler):
             data["Inventory"].sort(key=extract_count,reverse=True)
             for n,item in enumerate(data["Inventory"]):
                 print(item["Name"], ": ", item["Count"])
+            if (len(data["Inventory"]) == 0):
+                line1 = "no cargo"
+                line2 = " "
+                line3 = " "
+                dev.set_mfd_text(X52MfdLine.LINE1,line1)
+                dev.set_mfd_text(X52MfdLine.LINE2,line2)
+                dev.set_mfd_text(X52MfdLine.LINE3,line3)
+                return ()
             name1 = data["Inventory"][0]["Name"]
-            name2 = data["Inventory"][1]["Name"]
-            name3 = data["Inventory"][2]["Name"]
             count1 = str(data["Inventory"][0]["Count"])
-            count2 = str(data["Inventory"][1]["Count"])
-            count3 = str(data["Inventory"][2]["Count"])
             if len(name1) > (14 - len(count1)):
                 name1 = name1[0:(14 - len(count1))]
+            elif (len(data["Inventory"]) == 1):
+                line1 = "cargo:"
+                line2 = name1 + ": " + count1
+                line3 = " "
+                dev.set_mfd_text(X52MfdLine.LINE1,line1)
+                dev.set_mfd_text(X52MfdLine.LINE2,line2)
+                dev.set_mfd_text(X52MfdLine.LINE3,line3)
+                return ()
+            name2 = data["Inventory"][1]["Name"]
+            count2 = str(data["Inventory"][1]["Count"])
             if len(name2) > (14 - len(count2)):
                 name2 = name2[0:(14 - len(count2))]
+            elif (len(data["Inventory"]) == 2):
+                line1 = "cargo:"
+                line2 = name1 + ": " + count1
+                line3 = name2 + ": " + count2
+                dev.set_mfd_text(X52MfdLine.LINE1,line1)
+                dev.set_mfd_text(X52MfdLine.LINE2,line2)
+                dev.set_mfd_text(X52MfdLine.LINE3,line3)
+                return ()
+            name3 = data["Inventory"][2]["Name"]
+            count3 = str(data["Inventory"][2]["Count"])
             if len(name3) > (14 - len(count3)):
                 name3 = name3[0:(14 - len(count3))]
-            line1 = name1 + ": " + count1
-            line2 = name2 + ": " + count2
-            line3 = name3 + ": " + count3
-            dev.set_mfd_text(X52MfdLine.LINE1,line1)
-            dev.set_mfd_text(X52MfdLine.LINE2,line2)
-            dev.set_mfd_text(X52MfdLine.LINE3,line3)
+            else:
+                line1 = name1 + ": " + count1
+                line2 = name2 + ": " + count2
+                line3 = name3 + ": " + count3
+                dev.set_mfd_text(X52MfdLine.LINE1,line1)
+                dev.set_mfd_text(X52MfdLine.LINE2,line2)
+                dev.set_mfd_text(X52MfdLine.LINE3,line3)
+                return ()
            
 if __name__ == "__main__":
     event_handler = Handler()
@@ -78,6 +104,7 @@ if __name__ == "__main__":
     observer.schedule(event_handler, "/home/coghex/.steam/steam/steamapps/compatdata/359320/pfx/drive_c/users/steamuser/Saved Games/Frontier Developments/Elite Dangerous/Cargo.json", recursive=True)
     observer.start()
     signal.signal(signal.SIGINT, sigInt)
+    dev.set_mfd_brightness(32)
     try:
         main()
     except:
