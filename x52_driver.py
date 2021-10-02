@@ -282,8 +282,10 @@ class X52Driver:
             self._set_colored_led_status(led, X52LedRed.X52_BIT_LED_T2_RED, X52LedGreen.X52_BIT_LED_T2_GREEN)
         if (code == X52ProEvdevKeyMapping.TOGGLE_5) or (code == X52ProEvdevKeyMapping.TOGGLE_6):
             self._set_colored_led_status(led, X52LedRed.X52_BIT_LED_T3_RED, X52LedGreen.X52_BIT_LED_T3_GREEN)
-#            self._set_colored_led_status(led, X52LedRed.X52_BIT_LED_POV_RED, X52LedGreen.X52_BIT_LED_POV_GREEN)
-#            self._set_colored_led_status(led, X52LedRed.X52_BIT_LED_I_RED, X52LedGreen.X52_BIT_LED_I_GREEN)
+        if (code == X52ProEvdevKeyMapping.POV_2_DOWN) or (code == X52ProEvdevKeyMapping.POV_2_UP) or (code == X52ProEvdevKeyMapping.POV_2_LEFT) or (code == X52ProEvdevKeyMapping.POV_2_RIGHT):
+            self._set_colored_led_status(led, X52LedRed.X52_BIT_LED_POV_RED, X52LedGreen.X52_BIT_LED_POV_GREEN)
+        if (code == X52ProEvdevKeyMapping.FIRE_I):
+            self._set_colored_led_status(led, X52LedRed.X52_BIT_LED_I_RED, X52LedGreen.X52_BIT_LED_I_GREEN)
 #            self._set_led_status(X52Led.X52_BIT_LED_FIRE.value, led_status)
 #            self._set_led_status(X52Led.X52_BIT_LED_THROTTLE.value, led_status)
 

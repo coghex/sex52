@@ -97,6 +97,24 @@ class Handler(FileSystemEventHandler):
                 dev.set_mfd_text(X52MfdLine.LINE2,line2)
                 dev.set_mfd_text(X52MfdLine.LINE3,line3)
                 return ()
+
+def init():
+    dev.set_mfd_brightness(32)
+    line1 = "    sex52.py    "
+    line2 = "    --------    "
+    line3 = ">loaded: elite d"
+    dev.set_mfd_text(X52MfdLine.LINE1,line1)
+    dev.set_mfd_text(X52MfdLine.LINE2,line2)
+    dev.set_mfd_text(X52MfdLine.LINE3,line3)
+    dev.set_led(X52ProEvdevKeyMapping.FIRE_A,X52ColoredLedStatus.GREEN)
+    dev.set_led(X52ProEvdevKeyMapping.FIRE_B,X52ColoredLedStatus.GREEN)
+    dev.set_led(X52ProEvdevKeyMapping.FIRE_D,X52ColoredLedStatus.GREEN)
+    dev.set_led(X52ProEvdevKeyMapping.FIRE_E,X52ColoredLedStatus.GREEN)
+    dev.set_led(X52ProEvdevKeyMapping.FIRE_I,X52ColoredLedStatus.GREEN)
+    dev.set_led(X52ProEvdevKeyMapping.POV_2_UP,X52ColoredLedStatus.GREEN)
+    dev.set_led(X52ProEvdevKeyMapping.TOGGLE_1,X52ColoredLedStatus.GREEN)
+    dev.set_led(X52ProEvdevKeyMapping.TOGGLE_2,X52ColoredLedStatus.GREEN)
+    dev.set_led(X52ProEvdevKeyMapping.TOGGLE_3,X52ColoredLedStatus.GREEN)
            
 if __name__ == "__main__":
     event_handler = Handler()
@@ -104,7 +122,7 @@ if __name__ == "__main__":
     observer.schedule(event_handler, "/home/coghex/.steam/steam/steamapps/compatdata/359320/pfx/drive_c/users/steamuser/Saved Games/Frontier Developments/Elite Dangerous/Cargo.json", recursive=True)
     observer.start()
     signal.signal(signal.SIGINT, sigInt)
-    dev.set_mfd_brightness(32)
+    init()
     try:
         main()
     except:
