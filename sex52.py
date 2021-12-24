@@ -70,7 +70,7 @@ if __name__ == "__main__":
         exit(0)
     event_handler = Handler()
     observer = Observer()
-    observer.schedule(event_handler, "/home/coghex/.steam/steam/steamapps/compatdata/359320/pfx/drive_c/users/steamuser/Saved Games/Frontier Developments/Elite Dangerous/", recursive=True)
+    observer.schedule(event_handler, "/home/" + os.getlogin() + "/.steam/steam/steamapps/compatdata/359320/pfx/drive_c/users/steamuser/Saved Games/Frontier Developments/Elite Dangerous/", recursive=True)
     observer.start()
     signal.signal(signal.SIGINT, sigInt)
     init(dev)
